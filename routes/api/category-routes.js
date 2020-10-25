@@ -8,9 +8,11 @@ router.get('/', (req, res) => {
   // be sure to include its associated Products
   Category.findAll({
     include: Product
-  }).then(dbCategory => {
-    res.json(dbCategory);
-  });
+  }).then(dbCategory => res.json(dbCategory))
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.get('/:id', (req, res) => {
@@ -22,15 +24,27 @@ router.get('/:id', (req, res) => {
     },
     include: Product
   }).then(dbCategory => {
+    if (!dbCategory) {
+      res.status(404).json({ message: 'No category found with this id' });
+      return;
+    }
     res.json(dbCategory);
-  });
+  })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.post('/', (req, res) => {
   // create a new category
   Category.create(req.body).then(dbCategory => {
     res.json(dbCategory);
-  });
+  })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.put('/:id', (req, res) => {
@@ -40,8 +54,16 @@ router.put('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(dbCategory => {
+    if (!dbCategory) {
+      res.status(404).json({ message: 'No category found with this id' });
+      return;
+    }
     res.json(dbCategory);
-  });
+  })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 router.delete('/:id', (req, res) => {
@@ -51,8 +73,16 @@ router.delete('/:id', (req, res) => {
       id: req.params.id
     }
   }).then(dbCategory => {
+    if (!dbCategory) {
+      res.status(404).json({ message: 'No category found with this id' });
+      return;
+    }
     res.json(dbCategory);
-  });
+  })
+    .catch(err => {
+      console.log(err);
+      res.status(500).json(err);
+    });
 });
 
 module.exports = router;
